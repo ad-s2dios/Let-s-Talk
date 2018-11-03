@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Let\'s Talk.</string>
+    <string name="app_admob_id">ca-app-pub-4582775149580972~8816323948</string>
+    <string name="banner_admob_id">ca-app-pub-4582775149580972/3160016044</string>
+    <string name="device_id">"972D3172B08B27EDA872C739A62E9892"</string>
+    <string name="popup_admob_id">ca-app-pub-4582775149580972/3021071783</string>
+
+    <string name="help_text"></string>
+    <string name="title_activity_chat">ChatActivity</string>
+</resources>
