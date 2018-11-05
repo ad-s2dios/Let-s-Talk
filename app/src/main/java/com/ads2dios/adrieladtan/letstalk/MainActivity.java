@@ -162,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
                     talkIntent.putExtra(TalkActivity.CATEGORY_NAME, cat);
                     talkIntent.putExtra(TalkActivity.CATEGORY_DETAILS, catDetails);

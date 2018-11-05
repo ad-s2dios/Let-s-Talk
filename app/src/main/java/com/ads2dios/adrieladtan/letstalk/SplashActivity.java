@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import com.google.android.gms.ads.MobileAds;
 
 import com.google.firebase.database.DataSnapshot;
@@ -74,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
                     final ArrayList<String> oldCats = new ArrayList<>();
                     oldCats.addAll(Arrays.asList(detailsSP.getString(CAT_NAMES, "").split(",")));
 
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    mDatabase.child("Database").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             SharedPreferences.Editor editor;
@@ -109,7 +111,8 @@ public class SplashActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            Toast.makeText(SplashActivity.this, "Data not up to date", Toast.LENGTH_SHORT).show();
+                            startApp();
                         }
                     });
                 }
@@ -117,7 +120,8 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Toast.makeText(SplashActivity.this, "Data not up to date", Toast.LENGTH_SHORT).show();
+                startApp();
             }
         });
     }
