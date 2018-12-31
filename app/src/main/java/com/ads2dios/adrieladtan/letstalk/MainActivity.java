@@ -21,10 +21,6 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView titleTV;
-    Button removeAdsButt;
-    Button helpButt;
-
     AboutAdapter mAdapter;
     ListView aboutLV;
 
@@ -35,12 +31,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> cats;
     ArrayList<String> catDetails;
 
-    ArrayList<String> talkTo;
-    ArrayList<String> talkToDetails;
-    HelpAdapter helpAdapter;
-
-    boolean helpMode;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,49 +39,6 @@ public class MainActivity extends AppCompatActivity {
         appFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Regular.ttf");
         boldFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Bold.ttf");
         lightFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Light.ttf");
-
-        helpMode = false;
-        talkTo = new ArrayList<>();
-        talkTo.add("to Anyone");
-        talkTo.add("with Friends");
-        talkTo.add("to Yourself");
-        talkToDetails = new ArrayList<>();
-        talkToDetails.add("Choose a category to get awesome conversation prompts! Start any conversation in real life by asking the question given.");
-        talkToDetails.add("Sit in a circle and take turns to answer a prompt. Or answer a different prompt each.");
-        talkToDetails.add("Create a vlog of yourself answering prompts!");
-        helpAdapter = new HelpAdapter(getApplicationContext(), R.layout.about_lv_item, talkTo, talkToDetails);
-
-        titleTV = (TextView)findViewById(R.id.titleTV);
-        titleTV.setTypeface(boldFont);
-        removeAdsButt = (Button)findViewById(R.id.removeAdsButt);
-        removeAdsButt.setTypeface(lightFont);
-        removeAdsButt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(helpMode){
-                    switchMode();
-                }
-            }
-        });
-        helpButt = (Button)findViewById(R.id.instructButt);
-        helpButt.setTypeface(lightFont);
-        helpButt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(helpMode) {
-                    Intent intent = new Intent(Intent.ACTION_SENDTO);
-                    intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ad.s2dios@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Let's Talk: ");
-                    if (intent.resolveActivity(getPackageManager()) != null) {
-                        startActivity(intent);
-                    }
-                }
-                else{
-                    switchMode();
-                }
-            }
-        });
 
         SharedPreferences detailsSP = getSharedPreferences(SplashActivity.DETAILS_SP, Context.MODE_PRIVATE);
         cats = new ArrayList<>();
@@ -109,23 +56,6 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new AboutAdapter(getApplicationContext(), R.layout.about_lv_item, cats, catDetails);
         aboutLV = (ListView)findViewById(R.id.aboutLV);
         aboutLV.setAdapter(mAdapter);
-    }
-
-    private void switchMode(){
-        //if in help mode back should switch back
-        helpMode = !helpMode;
-        if(helpMode){
-            removeAdsButt.setText("Back");
-            removeAdsButt.setVisibility(View.VISIBLE);
-            helpButt.setText("Email feedback");
-            aboutLV.setAdapter(helpAdapter);
-        }
-        else{
-            removeAdsButt.setText("Remove Ads");
-            removeAdsButt.setVisibility(View.GONE);
-            helpButt.setText("How to use");
-            aboutLV.setAdapter(mAdapter);
-        }
     }
 
     public class AboutAdapter extends ArrayAdapter<String> {
@@ -149,14 +79,9 @@ public class MainActivity extends AppCompatActivity {
             //category
             final String catDetails = mCatDetails.get(position);
 
-            TextView aboutTV = (TextView)row.findViewById(R.id.aboutTV);
-            TextView catNameTV = (TextView)row.findViewById(R.id.catNameTV);
-            TextView catDetailsTV = (TextView)row.findViewById(R.id.catDetailsTV);
-
-            aboutTV.setTypeface(appFont);
-            catNameTV.setTypeface(appFont);
+            TextView catNameTV = row.findViewById(R.id.catNameTV);
+            TextView catDetailsTV = row.findViewById(R.id.catDetailsTV);
             catNameTV.setText(cat);
-            catDetailsTV.setTypeface(lightFont);
             catDetailsTV.setText(catDetails);
 
             row.setOnClickListener(new View.OnClickListener() {
@@ -171,61 +96,6 @@ public class MainActivity extends AppCompatActivity {
             });
 
             return row;
-        }
-    }
-
-    public class HelpAdapter extends ArrayAdapter<String> {
-        private int mResource;
-        private ArrayList<String> mCats;
-        private ArrayList<String> mCatDetails;
-
-        public HelpAdapter(Context context, int resource,ArrayList<String> cats, ArrayList<String> catDetails){
-            super(context, resource, cats);
-            this.mResource = resource;
-            this.mCats = cats;
-            this.mCatDetails = catDetails;
-        }
-        @Override
-        public View getView(final int position, View row, ViewGroup parent){
-            if (row==null){
-                row = LayoutInflater.from(getContext()).inflate(mResource, parent, false);
-            }
-
-            final String cat = mCats.get(position);
-            //category
-            final String catDetails = mCatDetails.get(position);
-
-            TextView aboutTV = (TextView)row.findViewById(R.id.aboutTV);
-            TextView catNameTV = (TextView)row.findViewById(R.id.catNameTV);
-            TextView catDetailsTV = (TextView)row.findViewById(R.id.catDetailsTV);
-
-            aboutTV.setTypeface(appFont);
-            aboutTV.setText("Talk");
-            catNameTV.setTypeface(appFont);
-            catNameTV.setText(cat);
-            catDetailsTV.setTypeface(lightFont);
-            catDetailsTV.setText(catDetails);
-
-            row.setClickable(false);
-
-            return row;
-        }
-    }
-
-    @Override
-    public void onBackPressed(){
-        if(helpMode) switchMode();
-        else {
-            new AlertDialog.Builder(this)
-                    .setTitle("Really Exit?")
-                    .setMessage("Are you sure you want to exit?")
-                    .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            MainActivity.super.onBackPressed();
-                        }
-                    }).create().show();
         }
     }
 

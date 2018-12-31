@@ -8,6 +8,10 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4582775149580972~8816323948"/>
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
@@ -26,7 +30,9 @@
         <activity
             android:name=".ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".LoginActivity"></activity>
     </application>
 
 </manifest>

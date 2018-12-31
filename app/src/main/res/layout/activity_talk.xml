@@ -15,7 +15,8 @@
         android:gravity="center"
         android:textColor="@color/grey"
         android:id="@+id/titleTV"
-        android:text="@string/app_name" />
+        android:text="@string/app_name"
+        android:fontFamily="@font/lato_bold"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,6 +74,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/buttLL"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_alignParentBottom="true">
 
             <ImageButton
@@ -84,6 +87,17 @@
                 android:scaleType="fitCenter"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:id="@+id/prevButt"
+                android:gravity="center"/>
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:src="@drawable/share"
+                android:background="@null"
+                android:scaleType="fitCenter"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:id="@+id/shareButt"
                 android:gravity="center"/>
 
             <!-- <ImageButton

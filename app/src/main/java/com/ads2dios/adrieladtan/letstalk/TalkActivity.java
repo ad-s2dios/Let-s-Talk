@@ -32,7 +32,6 @@ public class TalkActivity extends AppCompatActivity {
     int currentQuestion;
     ArrayList<String> questions;
 
-    TextView titleTV;
     TextView aboutTV;
     TextView catNameTV;
     TextView questionTV;
@@ -40,6 +39,7 @@ public class TalkActivity extends AppCompatActivity {
     ImageButton prevButt;
     //ImageButton favButt;
     ImageButton nextButt;
+    ImageButton shareButt;
 
     Typeface appFont;
     Typeface boldFont;
@@ -83,8 +83,6 @@ public class TalkActivity extends AppCompatActivity {
         adCount = 0;
         adTimer = System.currentTimeMillis();
 
-        titleTV = (TextView)findViewById(R.id.titleTV);
-        titleTV.setTypeface(boldFont);
         aboutTV = (TextView)findViewById(R.id.aboutTV);
         aboutTV.setTypeface(appFont);
         catNameTV = (TextView)findViewById(R.id.catNameTV);
@@ -125,6 +123,17 @@ public class TalkActivity extends AppCompatActivity {
                 currentQuestion += 1;
                 if(currentQuestion>=questions.size()) currentQuestion = 0;
                 updateQuestion();
+            }
+        });
+        shareButt = findViewById(R.id.shareButt);
+        shareButt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, category);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, questions.get(currentQuestion));
+                startActivity(Intent.createChooser(sharingIntent, "Share Prompt"));
             }
         });
     }

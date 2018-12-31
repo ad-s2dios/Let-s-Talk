@@ -17,7 +17,8 @@
             android:text="about"
             android:id="@+id/aboutTV"
             android:textColor="@color/grey"
-            android:textSize="30sp"/>
+            android:textSize="30sp"
+            android:fontFamily="@font/lato_regular"/>
 
         <TextView
             android:layout_width="0dp"
@@ -27,7 +28,8 @@
             android:id="@+id/catNameTV"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:textColor="@color/white"
-            android:textSize="30sp"/>
+            android:textSize="30sp"
+            android:fontFamily="@font/lato_regular"/>
 
     </LinearLayout>
 
@@ -38,6 +40,7 @@
         android:id="@+id/catDetailsTV"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:textColor="@color/navy"
-        android:textSize="18sp"/>
+        android:textSize="18sp"
+        android:fontFamily="@font/lato_light"/>
 
 </LinearLayout>
