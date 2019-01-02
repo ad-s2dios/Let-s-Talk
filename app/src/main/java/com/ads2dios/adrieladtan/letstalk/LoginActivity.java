@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -116,6 +117,10 @@ public class LoginActivity extends AppCompatActivity {
                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                 if (task.isSuccessful()) {
                                                                     Toast.makeText(LoginActivity.this, "Password changed", Toast.LENGTH_SHORT).show();
+                                                                    setMode(LOGGED_IN);
+                                                                }
+                                                                else{
+                                                                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }
                                                         });
@@ -209,7 +214,6 @@ public class LoginActivity extends AppCompatActivity {
     private void setMode(int newMode){
         mode = newMode;
         currentUser = mAuth.getCurrentUser();
-        if (currentUser==null) mode = LOGGED_OUT;
 
         switch (mode){
             case LOGGED_OUT:
@@ -217,10 +221,12 @@ public class LoginActivity extends AppCompatActivity {
                 headerTV.setVisibility(View.GONE);
                 firstET.setVisibility(View.VISIBLE);
                 firstET.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                firstET.setText("Email");
+                firstET.setText("");
+                firstET.setHint("Email");
                 secondET.setVisibility(View.VISIBLE);
                 secondET.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                secondET.setText("Password");
+                secondET.setText("");
+                secondET.setHint("Password");
                 thirdET.setVisibility(View.GONE);
                 fourthET.setVisibility(View.GONE);
                 firstButt.setVisibility(View.VISIBLE);
@@ -251,7 +257,8 @@ public class LoginActivity extends AppCompatActivity {
                 headerTV.setText("Change name for " + currentUser.getEmail());
                 firstET.setVisibility(View.VISIBLE);
                 firstET.setInputType(InputType.TYPE_CLASS_TEXT);
-                firstET.setText("New name");
+                firstET.setText("");
+                firstET.setHint("New name");
                 secondET.setVisibility(View.GONE);
                 thirdET.setVisibility(View.GONE);
                 fourthET.setVisibility(View.GONE);
@@ -266,13 +273,16 @@ public class LoginActivity extends AppCompatActivity {
                 headerTV.setText("Change password");
                 firstET.setVisibility(View.VISIBLE);
                 firstET.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                firstET.setText("Old password");
+                firstET.setText("");
+                firstET.setHint("Old password");
                 secondET.setVisibility(View.VISIBLE);
                 secondET.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                secondET.setText("New Password");
+                secondET.setText("");
+                secondET.setHint("New Password");
                 thirdET.setVisibility(View.VISIBLE);
                 thirdET.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                thirdET.setText("Confirm New Password");
+                thirdET.setText("");
+                thirdET.setHint("Confirm New Password");
                 fourthET.setVisibility(View.GONE);
                 firstButt.setVisibility(View.VISIBLE);
                 firstButt.setText("Change Password");
@@ -285,16 +295,20 @@ public class LoginActivity extends AppCompatActivity {
                 headerTV.setText("Create a new account");
                 firstET.setVisibility(View.VISIBLE);
                 firstET.setInputType(InputType.TYPE_CLASS_TEXT);
-                firstET.setText("Name");
+                firstET.setText("");
+                firstET.setHint("Name");
                 secondET.setVisibility(View.VISIBLE);
                 secondET.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-                secondET.setText("Email");
+                secondET.setText("");
+                secondET.setHint("Email");
                 thirdET.setVisibility(View.VISIBLE);
                 thirdET.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                thirdET.setText("Password");
+                thirdET.setText("");
+                thirdET.setHint("Password");
                 fourthET.setVisibility(View.VISIBLE);
                 fourthET.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                fourthET.setText("Confirm Password");
+                fourthET.setText("");
+                fourthET.setHint("Confirm Password");
                 firstButt.setVisibility(View.VISIBLE);
                 firstButt.setText("Sign up");
                 secondButt.setVisibility(View.GONE);

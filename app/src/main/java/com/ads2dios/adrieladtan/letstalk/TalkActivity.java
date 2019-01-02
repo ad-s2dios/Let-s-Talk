@@ -25,9 +25,6 @@ import java.util.Collections;
 
 public class TalkActivity extends AppCompatActivity {
 
-    public static final String CATEGORY_NAME = "category name";
-    public static final String CATEGORY_DETAILS = "category details";
-
     String category;
     int currentQuestion;
     ArrayList<String> questions;
@@ -78,7 +75,7 @@ public class TalkActivity extends AppCompatActivity {
         });
 
         Intent intent = getIntent();
-        category = intent.getStringExtra(CATEGORY_NAME);
+        category = intent.getStringExtra(MainActivity.CATEGORY_NAME);
         currentQuestion = 0;
         adCount = 0;
         adTimer = System.currentTimeMillis();
@@ -90,7 +87,7 @@ public class TalkActivity extends AppCompatActivity {
         catNameTV.setText(category);
         catDetailsTV = (TextView)findViewById(R.id.catDetailsTV);
         catDetailsTV.setTypeface(lightFont);
-        catDetailsTV.setText(intent.getStringExtra(CATEGORY_DETAILS));
+        catDetailsTV.setText(intent.getStringExtra(MainActivity.CATEGORY_DETAILS));
         questionTV = (TextView)findViewById(R.id.questionTV);
         questionTV.setTypeface(appFont);
 

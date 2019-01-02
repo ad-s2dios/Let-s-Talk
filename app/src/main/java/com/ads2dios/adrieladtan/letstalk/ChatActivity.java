@@ -20,31 +20,16 @@ public class ChatActivity extends AppCompatActivity {
     //ImageButton prevFab;
     ImageButton nextFab;
 
-    Typeface appFont;
-    Typeface boldFont;
-    Typeface lightFont;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        appFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Regular.ttf");
-        boldFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Bold.ttf");
-        lightFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Light.ttf");
-
-        titleTV = (TextView)findViewById(R.id.titleTV);
-        titleTV.setTypeface(boldFont);
-        aboutTV = (TextView)findViewById(R.id.aboutTV);
-        aboutTV.setTypeface(appFont);
         catNameTV = (TextView)findViewById(R.id.catNameTV);
-        catNameTV.setTypeface(appFont);
         //catNameTV.setText(category);
         catDetailsTV = (TextView)findViewById(R.id.catDetailsTV);
-        catDetailsTV.setTypeface(lightFont);
         //catDetailsTV.setText(intent.getStringExtra(CATEGORY_DETAILS));
-        questionTV = (TextView)findViewById(R.id.questionTV);
-        questionTV.setTypeface(appFont);
+        questionTV = findViewById(R.id.questionTV);
 
         nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
         nextFab.setOnClickListener(new View.OnClickListener() {

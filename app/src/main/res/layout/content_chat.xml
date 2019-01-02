@@ -1,68 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ChatActivity"
-    tools:showIn="@layout/activity_chat">
+    tools:showIn="@layout/activity_chat"
+    android:background="@color/mint">
+
+    <include layout="@layout/title"
+        android:id="@+id/title"/>
+
+    <!--include layout="@layout/about_lv_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:id="@+id/topPanel"/-->
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:id="@+id/topPanelLL"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="about"
+                android:id="@+id/aboutTV"
+                android:textColor="@color/grey"
+                android:textSize="25sp"
+                android:fontFamily="@font/lato_regular"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Politics"
+                android:id="@+id/catNameTV"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:fontFamily="@font/lato_regular"/>
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textSize="50sp"
+            android:layout_height="wrap_content"
+            android:text="just don't start world war 3"
             android:gravity="center"
-            android:textColor="@color/grey"
-            android:id="@+id/titleTV"
-            android:text="@string/app_name" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            android:background="@color/mint">
-
-            <include layout="@layout/chat_top_panel"
-                android:id="@+id/topPanel"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:layout_below="@+id/topPanel"
-                android:textSize="20sp"
-                android:text="\nHow many kids do you want to have?\n"
-                android:textColor="@color/navy"
-                android:background="@color/green"
-                android:gravity="center"
-                android:id="@+id/questionTV"
-                android:padding="1dp"/>
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/questionTV"
-                android:layout_above="@+id/textField"
-                android:id="@+id/chat_lv"/>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:id="@+id/textField"
-                android:text="@string/app_name"
-                android:background="@color/white"
-                android:textColor="@color/grey"
-                android:padding="@dimen/activity_horizontal_margin"/>
-
-        </RelativeLayout>
+            android:id="@+id/catDetailsTV"
+            android:textColor="@color/navy"
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_light"/>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/topPanelLL"
+        android:textSize="20sp"
+        android:text="\nHow many kids do you want to have?\n"
+        android:textColor="@color/navy"
+        android:background="@color/green"
+        android:gravity="center"
+        android:id="@+id/questionTV"
+        android:padding="1dp"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/questionTV"
+        android:layout_above="@+id/textField"
+        android:id="@+id/chat_lv"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/textField"
+        android:hint="@string/app_name"
+        android:background="@color/white"
+        android:textColor="@color/grey"
+        android:padding="@dimen/activity_horizontal_margin"/>
+
+</RelativeLayout>

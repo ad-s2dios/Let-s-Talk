@@ -8,6 +8,7 @@ import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,8 +21,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -45,9 +50,13 @@ public class MenuActivity extends AppCompatActivity {
     ArrayList<String> talkToDetails;
 
     LinearLayout userLL;
-    ImageView profile;
+    //ImageView profile;
     TextView usernameTV;
+    ProgressBar spinner;
+    private  FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
+    public static final String INTENT_IS_LOCAL = "isLocal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +70,25 @@ public class MenuActivity extends AppCompatActivity {
         feedbackButt = findViewById(R.id.feedbackButt);
         helpLV = findViewById(R.id.helpLV);
         userLL = findViewById(R.id.userLL);
-        profile = findViewById(R.id.profile);
+//        profile = findViewById(R.id.profile);
         usernameTV = findViewById(R.id.usernameTV);
+        spinner = findViewById(R.id.spinner);
 
         localButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MenuActivity.this, MainActivity.class));
+                Intent intent = new Intent(MenuActivity.this, MainActivity.class);
+                intent.putExtra(INTENT_IS_LOCAL, true);
+                startActivity(intent);
             }
         });
 
         onlineButt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: does stuff
+                Intent intent = new Intent(MenuActivity.this, MainActivity.class);
+                intent.putExtra(INTENT_IS_LOCAL, false);
+                startActivity(intent);
             }
         });
 
@@ -105,6 +119,7 @@ public class MenuActivity extends AppCompatActivity {
         talkToDetails.add("Sit in a circle and take turns to answer a prompt. Or answer a different prompt each.");
         talkToDetails.add("Create a vlog of yourself answering prompts!");
 
+        mAuth = FirebaseAuth.getInstance();
         userLL.setClickable(true);
         userLL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,19 +142,7 @@ public class MenuActivity extends AppCompatActivity {
 
         helpAdapter = new HelpAdapter(getApplicationContext(), R.layout.about_lv_item, talkTo, talkToDetails);
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser!=null){
-            // someone is loged in
-            userLL.setBackgroundColor(getResources().getColor(R.color.online));
-            usernameTV.setText(currentUser.getDisplayName());
-            profile.setVisibility(View.VISIBLE);
-            profile.setImageURI(currentUser.getPhotoUrl());
-        }
-        else{
-            userLL.setBackgroundColor(getResources().getColor(R.color.grey));
-            usernameTV.setText("Click to log in");
-            profile.setVisibility(View.INVISIBLE);
-        }
+        setColour();
     }
 
     @Override
@@ -156,6 +159,34 @@ public class MenuActivity extends AppCompatActivity {
                             MenuActivity.super.onBackPressed();
                         }
                     }).create().show();
+        }
+    }
+
+    private void setColour(){
+        currentUser = mAuth.getCurrentUser();
+        if (currentUser!=null){
+            // someone is loged in
+            userLL.setBackgroundColor(getResources().getColor(R.color.online));
+            usernameTV.setText("Online");
+//            profile.setVisibility(View.VISIBLE);
+//            profile.setImageURI(currentUser.getPhotoUrl());
+            spinner.setVisibility(View.GONE);
+            onlineButt.setEnabled(true);
+        }
+        else{
+            userLL.setBackgroundColor(getResources().getColor(R.color.grey));
+            usernameTV.setText("Offline");
+//            profile.setVisibility(View.INVISIBLE);
+
+            //create an anonymous profile for user if he is not already logged in
+            mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    setColour();
+                }
+            });
+            spinner.setVisibility(View.VISIBLE);
+            onlineButt.setEnabled(false);
         }
     }
 

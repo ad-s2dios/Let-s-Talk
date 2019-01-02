@@ -14,12 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String CATEGORY_NAME = "category name";
+    public static final String CATEGORY_DETAILS = "category details";
 
     AboutAdapter mAdapter;
     ListView aboutLV;
@@ -30,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> cats;
     ArrayList<String> catDetails;
+
+    boolean isLocal;
+    TextView onlineTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +62,14 @@ public class MainActivity extends AppCompatActivity {
         cats.add(0, "Anything");
         catDetails.add(0, "conversations about any topic under the sun");
         mAdapter = new AboutAdapter(getApplicationContext(), R.layout.about_lv_item, cats, catDetails);
-        aboutLV = (ListView)findViewById(R.id.aboutLV);
+        aboutLV = findViewById(R.id.aboutLV);
         aboutLV.setAdapter(mAdapter);
+
+        Intent intent = getIntent();
+        isLocal = intent.getBooleanExtra(MenuActivity.INTENT_IS_LOCAL,true);
+        onlineTV = findViewById(R.id.onlineTV);
+        if (isLocal) onlineTV.setVisibility(View.GONE);
+        else onlineTV.setVisibility(View.VISIBLE);
     }
 
     public class AboutAdapter extends ArrayAdapter<String> {
@@ -87,11 +101,18 @@ public class MainActivity extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
-                    talkIntent.putExtra(TalkActivity.CATEGORY_NAME, cat);
-                    talkIntent.putExtra(TalkActivity.CATEGORY_DETAILS, catDetails);
-                    startActivity(talkIntent);
+                    if (isLocal) {
+                        Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
+                        talkIntent.putExtra(CATEGORY_NAME, cat);
+                        talkIntent.putExtra(CATEGORY_DETAILS, catDetails);
+                        startActivity(talkIntent);
+                    }
+                    else{
+                        Intent matchmakerIntent = new Intent(MainActivity.this, MatchmakerActivity.class);
+                        matchmakerIntent.putExtra(CATEGORY_NAME, cat);
+                        matchmakerIntent.putExtra(CATEGORY_DETAILS, catDetails);
+                        startActivity(matchmakerIntent);
+                    }
                 }
             });
 

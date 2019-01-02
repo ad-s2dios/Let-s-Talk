@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MatchmakerActivity"
+    android:background="@color/mint">
+
+    <include layout="@layout/title"
+        android:id="@+id/title"/>
+
+    <include layout="@layout/about_lv_item"
+        android:id="@+id/topPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_below="@id/topPanel"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="10dp"
+        android:background="@color/grey">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textColor="@color/white"
+            android:text="loading..."
+            android:textSize="40sp"
+            android:fontFamily="@font/lato_regular"
+            android:id="@+id/loadingTV"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:padding="@dimen/activity_horizontal_margin"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="Try the 'anything' category.\nThere are more penpals there."
+        android:id="@+id/adviceTV"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:textSize="20sp"
+        android:fontFamily="@font/lato_light"
+        android:textColor="@color/navy"/>
+
+</RelativeLayout>

@@ -10,7 +10,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4582775149580972~8816323948"/>
+            android:value="ca-app-pub-4582775149580972~8816323948" />
 
         <activity
             android:name=".MainActivity"
@@ -32,7 +32,8 @@
             android:label="@string/title_activity_chat"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".MenuActivity" />
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MatchmakerActivity"></activity>
     </application>
 
 </manifest>
