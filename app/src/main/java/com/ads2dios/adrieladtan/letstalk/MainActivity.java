@@ -18,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -26,13 +28,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String CATEGORY_NAME = "category name";
     public static final String CATEGORY_DETAILS = "category details";
 
+    public static final int REQUEST_MATCHMAKER = 2;
+
     AboutAdapter mAdapter;
     ListView aboutLV;
-
-    Typeface appFont;
-    Typeface boldFont;
-    Typeface lightFont;
-
     ArrayList<String> cats;
     ArrayList<String> catDetails;
 
@@ -44,9 +43,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        appFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Regular.ttf");
-        boldFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Bold.ttf");
-        lightFont = Typeface.createFromAsset(getAssets(),"fonts/Lato-Light.ttf");
+        Intent intent = getIntent();
+        isLocal = intent.getBooleanExtra(MenuActivity.INTENT_IS_LOCAL,true);
+        onlineTV = findViewById(R.id.onlineTV);
+        if (isLocal) onlineTV.setVisibility(View.GONE);
+        else onlineTV.setVisibility(View.VISIBLE);
 
         SharedPreferences detailsSP = getSharedPreferences(SplashActivity.DETAILS_SP, Context.MODE_PRIVATE);
         cats = new ArrayList<>();
@@ -59,17 +60,14 @@ public class MainActivity extends AppCompatActivity {
             sp = getSharedPreferences(SP_string, Context.MODE_PRIVATE);
             catDetails.add(sp.getString(SplashActivity.CAT_DETAILS, null));
         }
-        cats.add(0, "Anything");
-        catDetails.add(0, "conversations about any topic under the sun");
-        mAdapter = new AboutAdapter(getApplicationContext(), R.layout.about_lv_item, cats, catDetails);
+
+        if (isLocal) {
+            cats.add(0, "Anything");
+            catDetails.add(0, "conversations about any topic under the sun");
+        }
+        mAdapter = new AboutAdapter(MainActivity.this, R.layout.about_lv_item, cats, catDetails);
         aboutLV = findViewById(R.id.aboutLV);
         aboutLV.setAdapter(mAdapter);
-
-        Intent intent = getIntent();
-        isLocal = intent.getBooleanExtra(MenuActivity.INTENT_IS_LOCAL,true);
-        onlineTV = findViewById(R.id.onlineTV);
-        if (isLocal) onlineTV.setVisibility(View.GONE);
-        else onlineTV.setVisibility(View.VISIBLE);
     }
 
     public class AboutAdapter extends ArrayAdapter<String> {
@@ -101,22 +99,30 @@ public class MainActivity extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isLocal) {
-                        Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
-                        talkIntent.putExtra(CATEGORY_NAME, cat);
-                        talkIntent.putExtra(CATEGORY_DETAILS, catDetails);
-                        startActivity(talkIntent);
-                    }
-                    else{
-                        Intent matchmakerIntent = new Intent(MainActivity.this, MatchmakerActivity.class);
-                        matchmakerIntent.putExtra(CATEGORY_NAME, cat);
-                        matchmakerIntent.putExtra(CATEGORY_DETAILS, catDetails);
-                        startActivity(matchmakerIntent);
-                    }
+                if (isLocal) {
+                    Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
+                    talkIntent.putExtra(CATEGORY_NAME, cat);
+                    talkIntent.putExtra(CATEGORY_DETAILS, catDetails);
+                    startActivity(talkIntent);
+                }
+                else{
+                    Intent matchmakerIntent = new Intent(MainActivity.this, MatchmakerActivity.class);
+                    matchmakerIntent.putExtra(CATEGORY_NAME, cat);
+                    matchmakerIntent.putExtra(CATEGORY_DETAILS, catDetails);
+                    startActivityForResult(matchmakerIntent, REQUEST_MATCHMAKER);
+                }
                 }
             });
 
             return row;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==REQUEST_MATCHMAKER){
+            Toast.makeText(MainActivity.this, "Chat ended", Toast.LENGTH_SHORT).show();
         }
     }
 

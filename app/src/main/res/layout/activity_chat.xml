@@ -1,5 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ChatActivity"
+    android:background="@color/mint">
+
+    <include layout="@layout/title"
+        android:id="@+id/title"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/title"
+        android:id="@+id/topPanel">
+
+        <ImageButton
+            android:id="@+id/prevButt"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/topPanelLL"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/prev_butt" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:id="@+id/topPanelLL"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/prevButt"
+            app:layout_constraintRight_toLeftOf="@id/nextButt">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="about"
+                    android:id="@+id/aboutTV"
+                    android:textColor="@color/grey"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/lato_regular"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Politics"
+                    android:id="@+id/catNameTV"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:textColor="@color/white"
+                    android:textSize="25sp"
+                    android:fontFamily="@font/lato_regular"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="just don't start world war 3"
+                android:gravity="center"
+                android:id="@+id/catDetailsTV"
+                android:textColor="@color/navy"
+                android:textSize="15sp"
+                android:fontFamily="@font/lato_light"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/nextButt"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/topPanelLL"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/next_butt" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_below="@+id/topPanel"
+        android:textSize="20sp"
+        android:text="\nHow many kids do you want to have?\n"
+        android:fontFamily="@font/lato_regular"
+        android:textColor="@color/navy"
+        android:background="@color/green"
+        android:gravity="center"
+        android:id="@+id/questionTV"
+        android:padding="20dp"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/questionTV"
+        android:layout_above="@+id/textLL"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5.0dp"
+        android:id="@+id/chat_lv"
+        android:clickable="false"
+        android:padding="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textLL"
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:id="@+id/messageET"
+            android:hint="@string/app_name"
+            android:background="@color/white"
+            android:textColor="@color/grey"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:imeOptions="actionSend"
+            android:layout_toLeftOf="@id/sendButt"/>
+
+        <ImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:src="@drawable/send"
+            android:id="@+id/sendButt"
+            android:background="@color/grey"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
+
+<!--android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,16 +162,16 @@
         android:id="@+id/nextFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
+        android:layout_gravity="center_vertical|right"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/next_arrow" />
 
-    <!--android.support.design.widget.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/prevFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
+        android:layout_gravity="center_vertical|left"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/prev_butt" /-->
+        android:src="@drawable/prev_butt" />
 
-</android.support.design.widget.CoordinatorLayout>
+</android.support.design.widget.CoordinatorLayout-->

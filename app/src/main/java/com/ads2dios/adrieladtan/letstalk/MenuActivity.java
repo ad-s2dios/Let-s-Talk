@@ -46,8 +46,7 @@ public class MenuActivity extends AppCompatActivity {
 
     ListView helpLV;
     HelpAdapter helpAdapter;
-    ArrayList<String> talkTo;
-    ArrayList<String> talkToDetails;
+    ArrayList<String[]> helpAL;
 
     LinearLayout userLL;
     //ImageView profile;
@@ -110,23 +109,18 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         });
-        talkTo = new ArrayList<>();
-        talkTo.add("to Anyone");
-        talkTo.add("with Friends");
-        talkTo.add("to Yourself");
-        talkToDetails = new ArrayList<>();
-        talkToDetails.add("Choose a category to get awesome conversation prompts! Start any conversation in real life by asking the question given.");
-        talkToDetails.add("Sit in a circle and take turns to answer a prompt. Or answer a different prompt each.");
-        talkToDetails.add("Create a vlog of yourself answering prompts!");
+        helpAL = new ArrayList<>();
+        helpAL.add(new String[]{"local", "in real life", "Grab some friends and select a category! Take turns answering prompts."});
+        helpAL.add(new String[]{"online", "with penpals", "Meet other online users and spark interesting conversation!"});
 
         mAuth = FirebaseAuth.getInstance();
-        userLL.setClickable(true);
-        userLL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MenuActivity.this, LoginActivity.class));
-            }
-        });
+        userLL.setClickable(false);
+//        userLL.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                startActivity(new Intent(MenuActivity.this, LoginActivity.class));
+////            }
+////        });
     }
 
     @Override
@@ -140,7 +134,7 @@ public class MenuActivity extends AppCompatActivity {
         if(!isConnected) onlineButt.setEnabled(false);
         else onlineButt.setEnabled(true);
 
-        helpAdapter = new HelpAdapter(getApplicationContext(), R.layout.about_lv_item, talkTo, talkToDetails);
+        helpAdapter = new HelpAdapter(MenuActivity.this, R.layout.about_lv_item, helpAL);
 
         setColour();
     }
@@ -177,16 +171,21 @@ public class MenuActivity extends AppCompatActivity {
             userLL.setBackgroundColor(getResources().getColor(R.color.grey));
             usernameTV.setText("Offline");
 //            profile.setVisibility(View.INVISIBLE);
-
-            //create an anonymous profile for user if he is not already logged in
-            mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    setColour();
-                }
-            });
-            spinner.setVisibility(View.VISIBLE);
             onlineButt.setEnabled(false);
+
+            ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+            if(isConnected) {
+                //create an anonymous profile for user if he is not already logged in
+                mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        setColour();
+                    }
+                });
+                spinner.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -206,16 +205,14 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-    public class HelpAdapter extends ArrayAdapter<String> {
+    public class HelpAdapter extends ArrayAdapter<String[]> {
         private int mResource;
-        private ArrayList<String> mCats;
-        private ArrayList<String> mCatDetails;
+        private ArrayList<String[]> mHelpAL;
 
-        public HelpAdapter(Context context, int resource, ArrayList<String> cats, ArrayList<String> catDetails) {
-            super(context, resource, cats);
+        public HelpAdapter(Context context, int resource, ArrayList<String[]> helpAL) {
+            super(context, resource, helpAL);
             this.mResource = resource;
-            this.mCats = cats;
-            this.mCatDetails = catDetails;
+            this.mHelpAL = helpAL;
         }
 
         @Override
@@ -224,16 +221,15 @@ public class MenuActivity extends AppCompatActivity {
                 row = LayoutInflater.from(getContext()).inflate(mResource, parent, false);
             }
 
-            final String cat = mCats.get(position);
-            final String catDetails = mCatDetails.get(position);
+            String[] helps = mHelpAL.get(position);
 
             TextView aboutTV = row.findViewById(R.id.aboutTV);
             TextView catNameTV = row.findViewById(R.id.catNameTV);
             TextView catDetailsTV = row.findViewById(R.id.catDetailsTV);
 
-            aboutTV.setText("Talk");
-            catNameTV.setText(cat);
-            catDetailsTV.setText(catDetails);
+            aboutTV.setText(helps[0]);
+            catNameTV.setText(helps[1]);
+            catDetailsTV.setText(helps[2]);
 
             row.setClickable(false);
 

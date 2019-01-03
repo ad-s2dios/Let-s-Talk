@@ -138,10 +138,11 @@ public class TalkActivity extends AppCompatActivity {
     void updateQuestion(){
         adCount += 1;
         questionTV.setText(questions.get(currentQuestion));
-        if(adCount%15 == 0 || (adCount%5 == 0 && mInterstitialAd.isLoaded() && (System.currentTimeMillis() - adTimer) > 60000)){
-            //every 5th count, if ad is loaded and 1 min (60s * 1000) has elapsed, ad shows. Or every 15 if u spam.
+        if (mInterstitialAd.isLoaded() && (adCount>=10 || (adCount>=5 && (System.currentTimeMillis() - adTimer)>60000))){
+            //every 5th count, if ad is loaded and 1 min (60s * 1000) has elapsed, ad shows. Or every 10 if u spam.
             mInterstitialAd.show();
             adTimer = System.currentTimeMillis();
+            adCount = 0;
         }
     }
 

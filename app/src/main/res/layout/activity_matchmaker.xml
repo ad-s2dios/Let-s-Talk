@@ -34,9 +34,9 @@
             android:gravity="center"
             android:padding="@dimen/activity_horizontal_margin"
             android:textColor="@color/white"
-            android:text="loading..."
+            android:text="waiting..."
             android:textSize="40sp"
-            android:fontFamily="@font/lato_regular"
+            android:fontFamily="@font/lato_light"
             android:id="@+id/loadingTV"/>
 
         <ProgressBar
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:text="Try the 'anything' category.\nThere are more penpals there."
+        android:text="Try the 'life' category.\nThere are more penpals there."
         android:id="@+id/adviceTV"
         android:padding="@dimen/activity_horizontal_margin"
         android:textSize="20sp"
