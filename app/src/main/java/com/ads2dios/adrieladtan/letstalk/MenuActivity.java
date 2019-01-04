@@ -62,6 +62,7 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        //register UI elements
         localButt = findViewById(R.id.localButt);
         onlineButt = findViewById(R.id.onlineButt);
         helpButt = findViewById(R.id.helpButt);
@@ -109,33 +110,27 @@ public class MenuActivity extends AppCompatActivity {
                 }
             }
         });
+
         helpAL = new ArrayList<>();
         helpAL.add(new String[]{"local", "in real life", "Grab some friends and select a category! Take turns answering prompts."});
         helpAL.add(new String[]{"online", "with penpals", "Meet other online users and spark interesting conversation!"});
+        helpAL.add(new String[]{"web", "connectivity", "Click the 'offline' banner to refresh."});
+        helpAdapter = new HelpAdapter(MenuActivity.this, R.layout.about_lv_item, helpAL);
 
         mAuth = FirebaseAuth.getInstance();
-        userLL.setClickable(false);
-//        userLL.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View view) {
-////                startActivity(new Intent(MenuActivity.this, LoginActivity.class));
-////            }
-////        });
+        userLL.setClickable(true);
+        userLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // startActivity(new Intent(MenuActivity.this, LoginActivity.class));
+                setColour();
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-
-        if(!isConnected) onlineButt.setEnabled(false);
-        else onlineButt.setEnabled(true);
-
-        helpAdapter = new HelpAdapter(MenuActivity.this, R.layout.about_lv_item, helpAL);
-
         setColour();
     }
 
@@ -158,26 +153,30 @@ public class MenuActivity extends AppCompatActivity {
 
     private void setColour(){
         currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null){
-            // someone is loged in
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
+        if (currentUser!=null && isConnected){
+            // someone is loged in and he is connected
             userLL.setBackgroundColor(getResources().getColor(R.color.online));
             usernameTV.setText("Online");
 //            profile.setVisibility(View.VISIBLE);
 //            profile.setImageURI(currentUser.getPhotoUrl());
             spinner.setVisibility(View.GONE);
             onlineButt.setEnabled(true);
+            onlineButt.setTextColor(getResources().getColor(R.color.navy));
         }
         else{
             userLL.setBackgroundColor(getResources().getColor(R.color.grey));
             usernameTV.setText("Offline");
 //            profile.setVisibility(View.INVISIBLE);
             onlineButt.setEnabled(false);
+            onlineButt.setTextColor(getResources().getColor(R.color.grey));
+            spinner.setVisibility(View.GONE);
 
-            ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
             if(isConnected) {
-                //create an anonymous profile for user if he is not already logged in
+                //create an anonymous profile for user if he is not already logged in and he's online
                 mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -190,7 +189,7 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void switchMode(){
-        //if in help mode back should switch back
+        //switch between help mode and not help mode
         helpMode = !helpMode;
         if(helpMode){
             feedbackButt.setVisibility(View.VISIBLE);
@@ -223,6 +222,7 @@ public class MenuActivity extends AppCompatActivity {
 
             String[] helps = mHelpAL.get(position);
 
+            //reusing about_lv_item, which is why the TV names are such
             TextView aboutTV = row.findViewById(R.id.aboutTV);
             TextView catNameTV = row.findViewById(R.id.catNameTV);
             TextView catDetailsTV = row.findViewById(R.id.catDetailsTV);

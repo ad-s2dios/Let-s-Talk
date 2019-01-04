@@ -109,6 +109,7 @@ public class ChatActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEND) {
                     send();
+                    return true;
                 }
                 return false;
             }
@@ -188,7 +189,7 @@ public class ChatActivity extends AppCompatActivity {
         chatroomDB.child("currentIndex").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue()==null) {
+                if (dataSnapshot.getValue(Integer.class)==null) {
                     // finish();
                     return;
                 }
@@ -249,8 +250,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         if (!hasDeleted) chatroomDB.child("users").child(currentUserID).setValue("offline");
     }
 
@@ -263,7 +264,9 @@ public class ChatActivity extends AppCompatActivity {
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                 public void onClick(DialogInterface arg0, int arg1) {
-                    ChatActivity.super.onBackPressed();
+                    finish();
+                    onDestroy();
+//                    ChatActivity.super.onBackPressed();
                 }
             }).create().show();
     }

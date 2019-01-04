@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +22,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> catDetails;
 
     boolean isLocal;
+    boolean isConnected;
+    ConnectivityManager cm;
     TextView onlineTV;
 
     @Override
@@ -47,12 +56,23 @@ public class MainActivity extends AppCompatActivity {
         isLocal = intent.getBooleanExtra(MenuActivity.INTENT_IS_LOCAL,true);
         onlineTV = findViewById(R.id.onlineTV);
         if (isLocal) onlineTV.setVisibility(View.GONE);
-        else onlineTV.setVisibility(View.VISIBLE);
+        else {
+            cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
 
+            onlineTV.setVisibility(View.VISIBLE);
+            setColour();
+            onlineTV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setColour();
+                }
+            });
+        }
+
+        //extracting saved category information
         SharedPreferences detailsSP = getSharedPreferences(SplashActivity.DETAILS_SP, Context.MODE_PRIVATE);
         cats = new ArrayList<>();
         cats.addAll(Arrays.asList(detailsSP.getString(SplashActivity.CAT_NAMES, "").split(",")));
-
         catDetails = new ArrayList<>();
         SharedPreferences sp;
         for(String cat:cats){
@@ -62,12 +82,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (isLocal) {
+            //add the 'anything' category for local (future implementation online)
             cats.add(0, "Anything");
             catDetails.add(0, "conversations about any topic under the sun");
         }
         mAdapter = new AboutAdapter(MainActivity.this, R.layout.about_lv_item, cats, catDetails);
         aboutLV = findViewById(R.id.aboutLV);
         aboutLV.setAdapter(mAdapter);
+    }
+
+    private void setColour(){
+        //check connectivity and update banner
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
+        if (isConnected){
+            onlineTV.setBackgroundColor(getResources().getColor(R.color.online));
+            onlineTV.setText("Online");
+        }
+        else{
+            onlineTV.setBackgroundColor(getResources().getColor(R.color.grey));
+            onlineTV.setText("Offline");
+        }
     }
 
     public class AboutAdapter extends ArrayAdapter<String> {
@@ -99,18 +135,21 @@ public class MainActivity extends AppCompatActivity {
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                if (isLocal) {
-                    Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
-                    talkIntent.putExtra(CATEGORY_NAME, cat);
-                    talkIntent.putExtra(CATEGORY_DETAILS, catDetails);
-                    startActivity(talkIntent);
-                }
-                else{
-                    Intent matchmakerIntent = new Intent(MainActivity.this, MatchmakerActivity.class);
-                    matchmakerIntent.putExtra(CATEGORY_NAME, cat);
-                    matchmakerIntent.putExtra(CATEGORY_DETAILS, catDetails);
-                    startActivityForResult(matchmakerIntent, REQUEST_MATCHMAKER);
-                }
+                    //if it's an online session, double check connectivity
+                    if (!isLocal) setColour();
+
+                    if (isLocal || !isConnected) {
+                        Intent talkIntent = new Intent(MainActivity.this, TalkActivity.class);
+                        talkIntent.putExtra(CATEGORY_NAME, cat);
+                        talkIntent.putExtra(CATEGORY_DETAILS, catDetails);
+                        startActivity(talkIntent);
+                    }
+                    else{
+                        Intent matchmakerIntent = new Intent(MainActivity.this, MatchmakerActivity.class);
+                        matchmakerIntent.putExtra(CATEGORY_NAME, cat);
+                        matchmakerIntent.putExtra(CATEGORY_DETAILS, catDetails);
+                        startActivityForResult(matchmakerIntent, REQUEST_MATCHMAKER);
+                    }
                 }
             });
 

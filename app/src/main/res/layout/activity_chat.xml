@@ -115,6 +115,7 @@
         android:dividerHeight="5.0dp"
         android:id="@+id/chat_lv"
         android:clickable="false"
+        android:contextClickable="false"
         android:padding="10dp"/>
 
     <LinearLayout

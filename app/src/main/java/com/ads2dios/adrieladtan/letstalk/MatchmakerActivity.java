@@ -55,6 +55,7 @@ public class MatchmakerActivity extends AppCompatActivity {
         catNameTV.setText(category);
         catDetailsTV.setText(catDetails);
         adviceTV = findViewById(R.id.adviceTV);
+        if (category.equals("Life")) adviceTV.setText("Beep beep boop...");
 
         listenerReferences = new ArrayList<>();
 
@@ -225,8 +226,11 @@ public class MatchmakerActivity extends AppCompatActivity {
 
                 Integer avail = mutableData.getValue(Integer.class);
 
-                if (avail==null) return Transaction.success(mutableData);
-                else mutableData.setValue(avail - 1);
+                if (avail==null ) return Transaction.success(mutableData);
+                else {
+                    if (avail<=0) mutableData.setValue(0);
+                    else mutableData.setValue(avail - 1);
+                }
                 return Transaction.success(mutableData);
             }
 

@@ -29,7 +29,7 @@
             android:id="@+id/profile"/-->
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
@@ -57,7 +57,8 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:id="@+id/menuLL">
+            android:id="@+id/menuLL"
+            android:visibility="visible">
 
             <Button
                 android:layout_width="250dp"
@@ -97,24 +98,43 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/feedbackButt"
+            android:layout_above="@id/bottomLL"
             android:id="@+id/helpLV"
+            android:contextClickable="false"
+            android:clickable="false"
             android:visibility="gone"/>
 
-        <Button
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@color/white"
-            android:textColor="@color/navy"
-            android:textSize="15sp"
-            android:text="Email feedback"
-            android:layout_margin="10dp"
-            android:id="@+id/feedbackButt"
-            android:gravity="center"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:fontFamily="@font/lato_light"
-            android:visibility="gone"/>
+            android:padding="20dp"
+            android:id="@+id/bottomLL">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:text="© AD s2dios"
+                android:textSize="20sp"
+                android:textColor="@color/grey"
+                android:fontFamily="@font/lato_bold"
+                android:gravity="center"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="3"
+                android:background="@color/white"
+                android:textColor="@color/navy"
+                android:textSize="15sp"
+                android:text="Email feedback"
+                android:id="@+id/feedbackButt"
+                android:gravity="center"
+                android:fontFamily="@font/lato_light"
+                android:visibility="gone"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

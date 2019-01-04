@@ -73,36 +73,42 @@ public class SplashActivity extends AppCompatActivity {
                     startApp();
                 }
                 else{
+                    //obtain all old category names so we can clean out all the old data
                     final ArrayList<String> oldCats = new ArrayList<>();
                     oldCats.addAll(Arrays.asList(detailsSP.getString(CAT_NAMES, "").split(",")));
-                    String catNamesString = dataSnapshot.child("catNames").getValue(String.class);
-                    detailsEditor = detailsSP.edit();
-                    detailsEditor.putString(CAT_NAMES, catNamesString);
-                    detailsEditor.apply();
-                    final ArrayList<String> newCats = new ArrayList<>();
-                    newCats.addAll(Arrays.asList(catNamesString.split(",")));
+
+                    final String catNamesString = dataSnapshot.child("catNames").getValue(String.class);
 
                     mDatabase.child("Database").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            //delete all old data
+                            detailsEditor = detailsSP.edit();
+                            detailsEditor.clear();
+                            detailsEditor.commit();
+
+                            //save the string of all new category names
+                            detailsEditor.putString(CAT_NAMES, catNamesString);
+                            detailsEditor.apply();
+
+                            //create an arraylist of all new category names
+                            ArrayList<String> newCats = new ArrayList<>();
+                            newCats.addAll(Arrays.asList(catNamesString.split(",")));
+
                             SharedPreferences.Editor editor;
-                            for(String cat:oldCats){
-                                String SP_string = "TALK_" + cat + "_SP";
-                                //see note abv
-                                editor = getSharedPreferences(SP_string, Context.MODE_PRIVATE).edit();
-                                editor.clear();
-                                editor.commit();
-                                //delete all old category details
-                            }
 
                             for(String cat:newCats){
+                                //saving the new data based on note abv
                                 String SP_string = "TALK_" + cat + "_SP";
-                                //see note abv
                                 editor = getSharedPreferences(SP_string, Context.MODE_PRIVATE).edit();
+
+                                //save category details and size
                                 editor.putString(CAT_DETAILS, dataSnapshot.child(cat).child("Details").getValue(String.class));
                                 int size = dataSnapshot.child(cat).child("Size").getValue(int.class);
                                 editor.putInt(CAT_SIZE, size);
+
                                 for(int i=0; i<size; i++){
+                                    //saving individual questions
                                     String iStr = String.valueOf(i);
                                     if(iStr.length()<2) iStr = "0" + iStr;
                                     String reference = cat + iStr;
@@ -110,7 +116,6 @@ public class SplashActivity extends AppCompatActivity {
                                     editor.putString(reference, question);
                                 }
                                 editor.commit();
-                                //delete all old category details
                             }
                             startApp();
                         }
