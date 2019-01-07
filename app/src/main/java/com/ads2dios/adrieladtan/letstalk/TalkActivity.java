@@ -117,9 +117,9 @@ public class TalkActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/html");
+                sharingIntent.setType("text/plain");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, category);
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Let's Talk.\n" + questions.get(currentQuestion) + "\n\n<a href=\"http://tinyurl.com/getletstalk\"Download</a> and get talking!");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Let's Talk.\n" + questions.get(currentQuestion) + "\n\nDownload and get talking at http://tinyurl.com/getletstalk");
                 startActivity(Intent.createChooser(sharingIntent, "Share Prompt"));
             }
         });

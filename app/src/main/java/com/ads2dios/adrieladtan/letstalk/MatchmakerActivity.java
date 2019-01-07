@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 public class MatchmakerActivity extends AppCompatActivity {
 
@@ -128,10 +129,15 @@ public class MatchmakerActivity extends AppCompatActivity {
             return;
         }
 
-        String penpalTemp = usernames.iterator().next().getKey();
-        if(penpalTemp.equals("available")) penpalTemp = usernames.iterator().next().getKey();
+        Iterator<DataSnapshot> iter = usernames.iterator();
+        DataSnapshot i = iter.next();
+        while (!i.getValue(String.class).equals("available")) {
+            if (iter.hasNext()) i = iter.next();
+            else return;
+        }
+        //TODO
 
-        final String penpal = penpalTemp;
+        final String penpal = i.getKey();
 
         final String chatroomID = mDatabase.child("Chatrooms").push().getKey();
         final DatabaseReference chatroomDB = mDatabase.child("Chatrooms").child(chatroomID);
